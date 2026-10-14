@@ -915,17 +915,6 @@
         }
       }
     },
-    "black" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "黑场"
-          }
-        }
-      }
-    },
     "Black & White" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1816,12 +1805,32 @@
         }
       }
     },
-    "Click the original layer to set %@. Click the eyedropper again to stop." : {
+    "Click the original layer to set black. Click the eyedropper again to stop." : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "点按原图层以设置%@。再次点按吸管可停止。"
+            "value" : "点按原图层以设置黑场。再次点按吸管可停止。"
+          }
+        }
+      }
+    },
+    "Click the original layer to set gray. Click the eyedropper again to stop." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点按原图层以设置灰场。再次点按吸管可停止。"
+          }
+        }
+      }
+    },
+    "Click the original layer to set white. Click the eyedropper again to stop." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点按原图层以设置白场。再次点按吸管可停止。"
           }
         }
       }
@@ -2100,17 +2109,6 @@
       }
     },
     "Color Overlay" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "颜色叠加"
-          }
-        }
-      }
-    },
-    "color overlay" : {
-      "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -3733,17 +3731,6 @@
         }
       }
     },
-    "drop shadow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "投影"
-          }
-        }
-      }
-    },
     "Drop to open in a new canvas" : {
       "localizations" : {
         "zh-Hans" : {
@@ -4870,17 +4857,6 @@
         }
       }
     },
-    "gray" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "灰场"
-          }
-        }
-      }
-    },
     "Green" : {
       "localizations" : {
         "zh-Hans" : {
@@ -5905,29 +5881,7 @@
         }
       }
     },
-    "inner glow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "内发光"
-          }
-        }
-      }
-    },
     "Inner Shadow" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "内阴影"
-          }
-        }
-      }
-    },
-    "inner shadow" : {
-      "extractionState" : "manual",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -8544,17 +8498,6 @@
         }
       }
     },
-    "outer glow" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "外发光"
-          }
-        }
-      }
-    },
     "Output black" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -11138,17 +11081,6 @@
         }
       }
     },
-    "stroke" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "描边"
-          }
-        }
-      }
-    },
     "Strong Contrast" : {
       "localizations" : {
         "zh-Hans" : {
@@ -12565,17 +12497,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "白色"
-          }
-        }
-      }
-    },
-    "white" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "白场"
           }
         }
       }

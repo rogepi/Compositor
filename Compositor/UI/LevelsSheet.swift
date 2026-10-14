@@ -54,7 +54,9 @@ struct LevelsSheet: View {
                 }
             }
             if let mode = edit?.sampleMode {
-                Text("Click the original layer to set \(mode.rawValue.lowercased().localized). Click the eyedropper again to stop.")
+                Text(mode == .black ? "Click the original layer to set black. Click the eyedropper again to stop."
+                     : mode == .gray ? "Click the original layer to set gray. Click the eyedropper again to stop."
+                     : "Click the original layer to set white. Click the eyedropper again to stop.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             VStack(alignment: .leading, spacing: 6) {

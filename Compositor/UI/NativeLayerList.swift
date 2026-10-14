@@ -1195,7 +1195,7 @@ private final class LayerEffectRow: NSView, NSDraggingSource {
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
         ])
-        toolTip = String(localized: "Click to select; double-click to edit; Option-drag to copy \(kind.rawValue.lowercased().localized)")
+        toolTip = String(localized: "Click to select; double-click to edit; Option-drag to copy \(kind.rawValue.localized.lowercased())")
         setAccessibilityElement(true)
         setAccessibilityRole(.group)
         setAccessibilityLabel(String(localized: "\(kind.rawValue.localized) effect"))
