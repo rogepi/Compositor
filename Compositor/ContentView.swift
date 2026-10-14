@@ -319,7 +319,9 @@ struct ContentView: View {
                         else if tool == .lasso, session.lassoKind == .polygonal { PolygonalLassoToolIcon().frame(width: 18, height: 18) }
                         else if tool == .wand, session.wandMode == .object { ObjectSelectionToolIcon().frame(width: 18, height: 18) }
                         // The Marquee's icon follows its shape: a dashed circle in Ellipse mode.
-                        else { Image(systemName: tool == .marquee && session.marqueeKind == .ellipse ? "circle.dashed" : session.symbol(for: tool)).font(.system(size: 17)) }
+                        // Latin letters in every language: localized, the Type tool's "Aa" reads "格式" in Chinese.
+                        else { Image(systemName: tool == .marquee && session.marqueeKind == .ellipse ? "circle.dashed" : session.symbol(for: tool)).font(.system(size: 17))
+                            .environment(\.locale, Locale(identifier: "en")) }
                     }
                     .frame(width: 36, height: 36)
                         .background(session.tool == tool ? Color.white.opacity(0.12) : .clear,
