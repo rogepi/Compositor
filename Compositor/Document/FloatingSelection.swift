@@ -47,7 +47,7 @@ extension EditorSession {
             return
         }
         var floating = ImageLayer(asset: asset, origin: lifted.region.origin)
-        floating.name = "Floating Selection"
+        floating.name = String(localized: "Floating Selection")
         floating.parentID = source.parentID
         floating.opacity = source.opacity
         floating.blendMode = source.blendMode

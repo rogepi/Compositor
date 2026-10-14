@@ -163,12 +163,13 @@ struct EffectsSheet: View {
                 .contentShape(shape)
         }
         .buttonStyle(.plain)
-        .help(kind.rawValue + " color")
-        .accessibilityLabel(kind.rawValue + " color")
+        .help("\(kind.rawValue.localized) color")
+        .accessibilityLabel("\(kind.rawValue.localized) color")
     }
 
-    private func slider(_ title: String, value: Binding<CGFloat>, range: ClosedRange<CGFloat>,
+    private func slider(_ title: LocalizedStringResource, value: Binding<CGFloat>, range: ClosedRange<CGFloat>,
                         inputRange: ClosedRange<CGFloat>? = nil, unit: String) -> some View {
+        let title = String(localized: title)
         let limits = inputRange ?? range
         let setAmount: (Double) -> Void = { amount in
             guard amount.isFinite else { return }

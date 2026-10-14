@@ -9,10 +9,10 @@ nonisolated enum NewCanvasUnit: String, CaseIterable, Sendable {
     /// The unit written out, for the summary line's pill.
     var name: String {
         switch self {
-        case .pixels: "Pixels"
-        case .inches: "Inches"
-        case .centimeters: "Centimeters"
-        case .millimeters: "Millimeters"
+        case .pixels: String(localized: "Pixels")
+        case .inches: String(localized: "Inches")
+        case .centimeters: String(localized: "Centimeters")
+        case .millimeters: String(localized: "Millimeters")
         }
     }
     /// The next unit, for the pill: px → in → cm → mm → px.
@@ -44,7 +44,13 @@ nonisolated enum NewCanvasUnit: String, CaseIterable, Sendable {
 /// What a new canvas starts as: see-through, or a Background layer of white or black.
 nonisolated enum NewCanvasBackground: String, CaseIterable, Sendable {
     case transparent, white, black
-    var title: String { "\(rawValue.capitalized) canvas" }
+    var title: String {
+        switch self {
+        case .transparent: String(localized: "Transparent canvas")
+        case .white: String(localized: "White canvas")
+        case .black: String(localized: "Black canvas")
+        }
+    }
     var next: NewCanvasBackground { Self.allCases[(Self.allCases.firstIndex(of: self)! + 1) % Self.allCases.count] }
     var color: CGColor? {
         switch self {
@@ -73,8 +79,8 @@ struct NewCanvasSheet: View {
     private var pixelHeight: Int? { unit.pixels(height, resolution: resolution) }
     private var valid: Bool { pixelWidth != nil && pixelHeight != nil }
     private var resolutionHelp: String {
-        let size = unit != .pixels ? pixelWidth.flatMap { w in pixelHeight.map { h in " · \(Int(resolution)) DPI: \(w) × \(h) pixels" } } : nil
-        return "Resolution: 72 for screens, 300 for print. Click to switch." + (size ?? "")
+        let size = unit != .pixels ? pixelWidth.flatMap { w in pixelHeight.map { h in String(localized: " · \(Int(resolution)) DPI: \(w) × \(h) pixels") } } : nil
+        return String(localized: "Resolution: 72 for screens, 300 for print. Click to switch.") + (size ?? "")
     }
     /// Shows the sizes in another unit, the same canvas written differently.
     private func switchUnit(to new: NewCanvasUnit) {
@@ -101,7 +107,7 @@ struct NewCanvasSheet: View {
                             Text("Custom").tag(CanvasPreset?.none)
                             ForEach(CanvasPreset.groups.indices, id: \.self) { group in
                                 Divider()
-                                ForEach(CanvasPreset.groups[group]) { Text($0.title).tag(CanvasPreset?.some($0)) }
+                                ForEach(CanvasPreset.groups[group]) { Text($0.title.localized).tag(CanvasPreset?.some($0)) }
                             }
                         }
                         .pickerStyle(.inline).labelsHidden()
@@ -128,12 +134,12 @@ struct NewCanvasSheet: View {
             }
             // The settings are pills, each changed the same way: click to step to the next choice.
             HStack(spacing: 4) {
-                CyclePill(background.title, help: "Start see-through, or with a white or black Background layer. Click to switch.") {
+                CyclePill(background.title, help: String(localized: "Start see-through, or with a white or black Background layer. Click to switch.")) {
                     background = background.next
                 }
                 .accessibilityIdentifier("canvasBackground")
                 Text("·")
-                CyclePill(unit.name, help: "Units: pixels, inches, centimeters or millimeters. Click to switch.") {
+                CyclePill(unit.name, help: String(localized: "Units: pixels, inches, centimeters or millimeters. Click to switch.")) {
                     switchUnit(to: unit.next)
                 }
                 .accessibilityIdentifier("canvasUnit")
@@ -200,13 +206,14 @@ struct NewCanvasSheet: View {
         }
         return nil
     }
-    private func dimension(_ title: String, text: Binding<String>, field: Field) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private func dimension(_ title: LocalizedStringResource, text: Binding<String>, field: Field) -> some View {
+        let title = String(localized: title)
+        return VStack(alignment: .leading, spacing: 8) {
             Text(title).font(.callout.weight(.medium))
             HStack {
                 TextField(title, text: text).textFieldStyle(.plain)
                     .focused($focusedField, equals: field)
-                    .accessibilityIdentifier(title.lowercased() + "Input")
+                    .accessibilityIdentifier(field == .width ? "widthInput" : "heightInput")
                 Text(unit.rawValue).foregroundStyle(.secondary)
             }
             .padding(12).background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 7))

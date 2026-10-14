@@ -207,7 +207,7 @@ struct DialogColorSwatch: View {
                 .contentShape(shape)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(title)
+        .accessibilityLabel(title.localized)
         .onChange(of: session.colorPicker?.color) { _, _ in session.previewDialogColor() }
         .onDisappear { Self.closePicker(session) }
     }

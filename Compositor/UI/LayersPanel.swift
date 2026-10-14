@@ -42,13 +42,13 @@ struct LayersPanel: View {
                 LayerMaskMenu(session: session)
                 Menu {
                     ForEach(AdjustmentKind.allCases, id: \.self) { kind in
-                        Button(kind.rawValue) { session.addAdjustment(kind) }
+                        Button(kind.rawValue.localized) { session.addAdjustment(kind) }
                     }
                 } label: { Image(systemName: "circle.lefthalf.filled").footerHitArea() }
                     .menuStyle(.borderlessButton).fixedSize().help("New adjustment layer").disabled(!session.layersLookEditable)
                 Menu {
                     ForEach(LayerEffectKind.allCases, id: \.self) { kind in
-                        Button(kind.rawValue + "…") { session.addEffect(kind) }
+                        Button(kind.rawValue.localized + "…") { session.addEffect(kind) }
                     }
                 } label: { Image(systemName: "sparkles").footerHitArea() }
                     .menuStyle(.borderlessButton).fixedSize()

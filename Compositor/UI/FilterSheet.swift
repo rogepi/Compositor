@@ -70,7 +70,7 @@ struct FilterSheet: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Picker("Quality", selection: Binding(get: { settings.backgroundQuality },
                                                      set: { new in update { $0.backgroundQuality = new } })) {
-                    ForEach(BackgroundQuality.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                    ForEach(BackgroundQuality.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
                 }
                 .pickerStyle(.segmented).labelsHidden()
                 .help("Basic is quick; Advanced refines the mask against the layer's own detail, for hair and fur")
@@ -208,7 +208,7 @@ struct FilterSheet: View {
         Picker("Style", selection: Binding(get: { dither.style }, set: { new in update { $0.dither.style = new } })) {
             ForEach(DitherStyle.groups.indices, id: \.self) { group in
                 if group > 0 { Divider() }
-                ForEach(DitherStyle.groups[group], id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(DitherStyle.groups[group], id: \.self) { Text($0.rawValue.localized).tag($0) }
             }
         }
         if dither.style.usesPixelSize {
@@ -247,7 +247,7 @@ struct FilterSheet: View {
         // A menu, like Style: the three choices as segments are wider than the panel, which then flips between
         // squeezing the row and wrapping it, resizing itself at every slider step.
         Picker("Colors", selection: Binding(get: { dither.colors }, set: { new in update { $0.dither.colors = new } })) {
-            ForEach(DitherColors.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+            ForEach(DitherColors.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
         }
         .fixedSize()
         if dither.colors == .twoColors {
@@ -261,7 +261,7 @@ struct FilterSheet: View {
         }
         if dither.pixelSize > 1, dither.style.usesPixelSize {
             Picker("Pixel Shape", selection: Binding(get: { dither.pixelShape }, set: { new in update { $0.dither.pixelShape = new } })) {
-                ForEach(DitherPixelShape.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(DitherPixelShape.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
             }
             .fixedSize()
             .help("Draw each chunky pixel as a solid square, or as a round dot like a dot-matrix screen")
@@ -298,7 +298,7 @@ struct FilterSheet: View {
         control("Black Level", \.scanlines.blackLevel, range: 0...100, unit: "%", decimals: 0, logarithmic: false)
             .help("How bright the lines are where the picture is black, so they show even over black")
         Picker("Colors", selection: Binding(get: { lines.colors }, set: { new in update { $0.scanlines.colors = new } })) {
-            ForEach(DitherColors.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+            ForEach(DitherColors.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
         }
         .fixedSize()
         if lines.colors == .twoColors {
@@ -312,7 +312,7 @@ struct FilterSheet: View {
         }
     }
 
-    private func swatch(_ color: AdjustmentColor, help: String, action: @escaping () -> Void) -> some View {
+    private func swatch(_ color: AdjustmentColor, help: LocalizedStringKey, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             let shape = RoundedRectangle(cornerRadius: 6, style: .continuous)
             shape.fill(Color(.sRGB, red: color.red, green: color.green, blue: color.blue))
@@ -345,8 +345,9 @@ struct FilterSheet: View {
 
     /// A slider plus an exact field. Logarithmic sliders give the small values used most most of the travel.
     /// A colored track draws the slider as Camera Raw's, where a double-click on the title or knob resets it.
-    private func control(_ title: String, _ key: WritableKeyPath<FilterSettings, Double>, range: ClosedRange<Double>,
+    private func control(_ title: LocalizedStringResource, _ key: WritableKeyPath<FilterSettings, Double>, range: ClosedRange<Double>,
                          unit: String, decimals: Int, logarithmic: Bool, track: CameraRawSliderTrack? = nil) -> some View {
+        let title = String(localized: title)
         let step = pow(10, Double(decimals))
         let reset = { update { $0 = Self.resetting(key, in: $0) } }
         return HStack(spacing: 10) {
@@ -359,7 +360,7 @@ struct FilterSheet: View {
                             range: range)
             if let track {
                 CameraRawSlider(value: settings[keyPath: key], range: range, track: track,
-                                help: "\(title). Double-click to reset.",
+                                help: String(localized: "\(title). Double-click to reset."),
                                 onChange: { value in update { $0[keyPath: key] = (value * step).rounded() / step } },
                                 onReset: reset)
             } else {
@@ -401,7 +402,8 @@ struct GradientMapControls: View {
 
     private func color(_ value: AdjustmentColor) -> Color { Color(.sRGB, red: value.red, green: value.green, blue: value.blue) }
 
-    private func swatch(_ title: String, _ value: AdjustmentColor, action: @escaping () -> Void) -> some View {
+    private func swatch(_ title: LocalizedStringResource, _ value: AdjustmentColor, action: @escaping () -> Void) -> some View {
+        let title = String(localized: title)
         let shape = RoundedRectangle(cornerRadius: 6, style: .continuous)
         return HStack(spacing: 8) {
             Button(action: action) {

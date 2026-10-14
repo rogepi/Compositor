@@ -10,7 +10,7 @@ struct CameraRawGeometryControls: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Upright").font(.subheadline)
             Picker("Upright", selection: uprightBinding) {
-                ForEach(CameraRawUprightMode.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(CameraRawUprightMode.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
             }
             .labelsHidden()
             .pickerStyle(.segmented)
@@ -36,7 +36,7 @@ struct CameraRawGeometryControls: View {
                 }
             }
             Picker("Projection", selection: binding(\.projection)) {
-                ForEach(CameraRawProjection.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(CameraRawProjection.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
             }
             .help("Perspective allows stronger keystone. Rectilinear keeps the warp gentler.")
             geometrySlider("Vertical", \.vertical, help: "Straightens vertical lines toward the center.")
@@ -62,8 +62,10 @@ struct CameraRawGeometryControls: View {
         Binding(get: { raw.geometry[keyPath: key] }, set: { value in update { $0.cameraRaw.geometry[keyPath: key] = value } })
     }
 
-    private func geometrySlider(_ title: String, _ key: WritableKeyPath<CameraRawGeometrySettings, Double>,
-                                range: ClosedRange<Double> = CameraRawGeometrySettings.toneRange, help: String) -> some View {
+    private func geometrySlider(_ title: LocalizedStringResource, _ key: WritableKeyPath<CameraRawGeometrySettings, Double>,
+                                range: ClosedRange<Double> = CameraRawGeometrySettings.toneRange, help: LocalizedStringResource) -> some View {
+        let title = String(localized: title)
+        let help = String(localized: help)
         let value = raw.geometry[keyPath: key]
         return HStack(spacing: 10) {
             Text(title).frame(minWidth: CameraRawControls.labelWidth, alignment: .leading).help(help)
@@ -95,7 +97,7 @@ struct CameraRawCalibrationControls: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Picker("Process", selection: binding(\.process)) {
-                ForEach(CameraRawProcessVersion.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                ForEach(CameraRawProcessVersion.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
             }
             .help("Chooses how strongly the calibration sliders below are applied. Version 6 is the current default.")
             Text(raw.calibration.process.summary)
@@ -121,7 +123,9 @@ struct CameraRawCalibrationControls: View {
         Binding(get: { raw.calibration[keyPath: key] }, set: { value in update { $0.cameraRaw.calibration[keyPath: key] = value } })
     }
 
-    private func calibrationSlider(_ title: String, _ key: WritableKeyPath<CameraRawCalibrationSettings, Double>, help: String) -> some View {
+    private func calibrationSlider(_ title: LocalizedStringResource, _ key: WritableKeyPath<CameraRawCalibrationSettings, Double>, help: LocalizedStringResource) -> some View {
+        let title = String(localized: title)
+        let help = String(localized: help)
         let value = raw.calibration[keyPath: key]
         return HStack(spacing: 10) {
             Text(title).frame(minWidth: CameraRawControls.labelWidth, alignment: .leading).help(help)

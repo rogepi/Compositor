@@ -63,8 +63,8 @@ struct TypeControls: View {
                                     .contentShape(RoundedRectangle(cornerRadius: 4))
                             }
                             .buttonStyle(.plain)
-                            .help("Align " + alignment.rawValue.lowercased())
-                            .accessibilityLabel("Align " + alignment.rawValue.lowercased())
+                            .help(alignment == .left ? "Align left" : alignment == .center ? "Align center" : "Align right")
+                            .accessibilityLabel(alignment == .left ? "Align left" : alignment == .center ? "Align center" : "Align right")
                             .accessibilityAddTraits(selected ? .isSelected : [])
                         }
                     }
@@ -119,7 +119,7 @@ private struct TypeFontPicker: NSViewRepresentable {
         button.cell?.lineBreakMode = .byTruncatingTail
         button.cell?.usesSingleLineMode = true
         button.cell?.alignment = .left
-        button.setAccessibilityLabel("Font")
+        button.setAccessibilityLabel(String(localized: "Font"))
         button.target = context.coordinator
         button.action = #selector(Coordinator.choose(_:))
         button.menu?.delegate = context.coordinator
@@ -145,7 +145,7 @@ private struct TypeFontPicker: NSViewRepresentable {
     private static func isMultiple(_ item: NSMenuItem?) -> Bool { item?.representedObject as? String == multiple }
     static func showMultiple(in button: NSPopUpButton) {
         if !isMultiple(button.item(at: 0)) {
-            let item = NSMenuItem(title: multiple, action: nil, keyEquivalent: "")
+            let item = NSMenuItem(title: String(localized: "(Multiple)"), action: nil, keyEquivalent: "")
             item.representedObject = multiple
             button.menu?.insertItem(item, at: 0)
         }

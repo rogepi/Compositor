@@ -68,7 +68,7 @@ nonisolated enum CMYK {
            let described = ColorSyncProfileCopyDescriptionString(profile)?.takeRetainedValue() {
             name = (described as String).trimmingCharacters(in: .whitespacesAndNewlines)
         }
-        return CMYKProfile(name: name?.isEmpty == false ? name! : "Embedded CMYK Profile", data: data)
+        return CMYKProfile(name: name?.isEmpty == false ? name! : String(localized: "Embedded CMYK Profile"), data: data)
     }
 
     /// A file came in as CMYK through `profile`: kept, as Load Profile keeps one, and chosen, so proofing and CMYK
@@ -186,5 +186,5 @@ nonisolated enum CMYK {
 
 nonisolated enum CMYKError: LocalizedError {
     case notCMYK
-    var errorDescription: String? { "That profile isn’t a CMYK output profile." }
+    var errorDescription: String? { String(localized: "That profile isn’t a CMYK output profile.") }
 }

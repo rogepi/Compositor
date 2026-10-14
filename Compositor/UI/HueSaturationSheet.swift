@@ -34,7 +34,7 @@ struct HueSaturationSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 12) {
                 Picker("Range", selection: settings.range) {
-                    ForEach(ColorRange.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                    ForEach(ColorRange.allCases, id: \.self) { Text($0.rawValue.localized).tag($0) }
                 }
                 .pickerStyle(.menu).frame(width: 160).labelsHidden().disabled(current.colorize)
                 Spacer()
@@ -88,7 +88,7 @@ struct HueSaturationSheet: View {
                     .background(session.hueSampleMode == mode ? Color.accentColor.opacity(0.25) : .clear,
                                 in: RoundedRectangle(cornerRadius: 4))
                     .help(mode.help)
-                    .accessibilityLabel("\(mode.rawValue) color")
+                    .accessibilityLabel("\(mode.rawValue.localized) color")
                 }
                 Divider().frame(height: 16)
             }
@@ -122,9 +122,10 @@ struct HueSaturationSheet: View {
     }
 
     /// A colored slider plus an exact field. A double-click on the title or knob resets that one value.
-    private func slider(_ title: String, value: Binding<Double>, range: ClosedRange<Double>, unit: String,
+    private func slider(_ title: LocalizedStringResource, value: Binding<Double>, range: ClosedRange<Double>, unit: String,
                         track: CameraRawSliderTrack, reset: Double) -> some View {
-        HStack(spacing: 10) {
+        let title = String(localized: title)
+        return HStack(spacing: 10) {
             Text(title).frame(width: 76, alignment: .leading)
                 .onTapGesture(count: 2) { value.wrappedValue = reset }
                 .scrubbable(sensitivity: 1, value: value, range: range)

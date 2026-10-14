@@ -41,8 +41,10 @@ struct CameraRawDetailControls: View {
         }
     }
 
-    private func sharpenSlider(_ title: String, _ key: WritableKeyPath<CameraRawDetailSettings, Double>, range: ClosedRange<Double>,
-                               decimals: Int, reset: Double, maskingPreview: Bool = false, help: String) -> some View {
+    private func sharpenSlider(_ title: LocalizedStringResource, _ key: WritableKeyPath<CameraRawDetailSettings, Double>, range: ClosedRange<Double>,
+                               decimals: Int, reset: Double, maskingPreview: Bool = false, help: LocalizedStringResource) -> some View {
+        let title = String(localized: title)
+        let help = String(localized: help)
         let step = pow(10, Double(decimals))
         let value = raw.detail[keyPath: key]
         return HStack(spacing: 10) {
@@ -62,8 +64,8 @@ struct CameraRawDetailControls: View {
         }
     }
 
-    private func slider(_ title: String, _ key: WritableKeyPath<CameraRawDetailSettings, Double>, range: ClosedRange<Double>,
-                        decimals: Int, reset: Double, help: String) -> some View {
+    private func slider(_ title: LocalizedStringResource, _ key: WritableKeyPath<CameraRawDetailSettings, Double>, range: ClosedRange<Double>,
+                        decimals: Int, reset: Double, help: LocalizedStringResource) -> some View {
         sharpenSlider(title, key, range: range, decimals: decimals, reset: reset, help: help)
     }
 
@@ -141,8 +143,10 @@ struct CameraRawOpticsControls: View {
         Binding(get: { raw.optics[keyPath: key] }, set: { newValue in update { $0.cameraRaw.optics[keyPath: key] = newValue } })
     }
 
-    private func opticsSlider(_ title: String, _ key: WritableKeyPath<CameraRawOpticsSettings, Double>, range: ClosedRange<Double>,
-                              reset: Double, help: String) -> some View {
+    private func opticsSlider(_ title: LocalizedStringResource, _ key: WritableKeyPath<CameraRawOpticsSettings, Double>, range: ClosedRange<Double>,
+                              reset: Double, help: LocalizedStringResource) -> some View {
+        let title = String(localized: title)
+        let help = String(localized: help)
         let value = raw.optics[keyPath: key]
         return HStack(spacing: 10) {
             Text(title).frame(minWidth: CameraRawControls.labelWidth, alignment: .leading).help(help)
@@ -161,9 +165,11 @@ struct CameraRawOpticsControls: View {
         }
     }
 
-    private func hueRange(_ title: String, low: WritableKeyPath<CameraRawOpticsSettings, Double>,
-                          high: WritableKeyPath<CameraRawOpticsSettings, Double>, help: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+    private func hueRange(_ title: LocalizedStringResource, low: WritableKeyPath<CameraRawOpticsSettings, Double>,
+                          high: WritableKeyPath<CameraRawOpticsSettings, Double>, help: LocalizedStringResource) -> some View {
+        let title = String(localized: title)
+        let help = String(localized: help)
+        return VStack(alignment: .leading, spacing: 4) {
             Text(title).font(.caption).foregroundStyle(.secondary).help(help)
             HStack(spacing: 8) {
                 Text("Low").font(.caption2).help("Start of the hue range, in degrees.")
