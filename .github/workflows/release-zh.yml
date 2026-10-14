@@ -34,6 +34,8 @@ jobs:
       - name: Turn off automatic update checks
         run: plutil -replace SUEnableAutomaticChecks -bool NO Config/Info.plist
 
+      # Without a team, the hardened runtime's library validation won't load the app's own Sparkle.framework, which
+      # stops it at launch. It's needed only for notarization, which this build doesn't have.
       - name: Build
         run: >
           xcodebuild build -quiet
@@ -45,6 +47,7 @@ jobs:
           CODE_SIGN_IDENTITY=-
           CODE_SIGN_STYLE=Manual
           DEVELOPMENT_TEAM=
+          ENABLE_HARDENED_RUNTIME=NO
 
       - name: Package
         id: package
@@ -52,6 +55,11 @@ jobs:
           APP=DerivedData/Build/Products/Release/Compositor.app
           test -f "$APP/Contents/Resources/zh-Hans.lproj/Localizable.strings"
           codesign --verify --deep --strict --verbose=2 "$APP"
+          # Launches it, to catch a build that stops at once: still running after a few seconds is good enough.
+          "$APP/Contents/MacOS/Compositor" & PID=$!
+          sleep 8
+          kill -0 $PID || { echo "Compositor quit at launch"; exit 1; }
+          kill $PID
           VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")
           ZIP="Compositor-$VERSION-zh-Hans.zip"
           ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
