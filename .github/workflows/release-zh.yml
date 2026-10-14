@@ -1,0 +1,79 @@
+name: Release (zh-Hans)
+
+# A downloadable build of this fork, with the Simplified Chinese localization, published as a GitHub release when a
+# tag like v1.5.2-zh.1 is pushed. It's signed ad hoc, not with a Developer ID, and not notarized, so macOS asks before
+# opening it the first time.
+
+on:
+  push:
+    tags: ['v*-zh*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Select Xcode 26.6
+        run: sudo xcode-select -s /Applications/Xcode_26.6.app
+
+      - name: Resolve Swift packages
+        run: >
+          xcodebuild -resolvePackageDependencies
+          -project Compositor.xcodeproj
+          -scheme Compositor
+          -onlyUsePackageVersionsFromResolvedFile
+
+      # The update feed is upstream's, whose English builds would replace this one. This build doesn't check it by
+      # itself; Check for Updates… still can.
+      - name: Turn off automatic update checks
+        run: plutil -replace SUEnableAutomaticChecks -bool NO Config/Info.plist
+
+      - name: Build
+        run: >
+          xcodebuild build -quiet
+          -project Compositor.xcodeproj
+          -scheme Compositor
+          -configuration Release
+          -destination 'generic/platform=macOS'
+          -derivedDataPath DerivedData
+          CODE_SIGN_IDENTITY=-
+          CODE_SIGN_STYLE=Manual
+          DEVELOPMENT_TEAM=
+
+      - name: Package
+        id: package
+        run: |
+          APP=DerivedData/Build/Products/Release/Compositor.app
+          test -f "$APP/Contents/Resources/zh-Hans.lproj/Localizable.strings"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")
+          ZIP="Compositor-$VERSION-zh-Hans.zip"
+          ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
+          echo "zip=$ZIP" >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          ZIP: ${{ steps.package.outputs.zip }}
+        run: |
+          cat > notes.md <<'NOTES'
+          Compositor 简体中文版，基于上游最新代码构建。
+
+          **安装**
+          1. 下载下方的 zip，解压后把 Compositor.app 拖到“应用程序”文件夹。
+          2. 这个版本没有经过 Apple 公证，第一次打开会被拦截：在“系统设置 › 隐私与安全性”里找到 Compositor，点“仍要打开”。
+             也可以在终端运行 `xattr -dr com.apple.quarantine /Applications/Compositor.app` 后再打开。
+          3. 系统语言是简体中文时自动显示中文；也可以在“系统设置 › 通用 › 语言与地区 › App”里单独给 Compositor 设为简体中文。
+
+          **注意**
+          - 已关闭自动检查更新：更新源是上游的英文版，手动“检查更新…”会装回英文版。
+          - 和上游版本的 bundle ID 相同，装在同一位置会互相覆盖。
+          NOTES
+          gh release create "$TAG" "$ZIP" --title "Compositor ${TAG#v}" --notes-file notes.md --prerelease
